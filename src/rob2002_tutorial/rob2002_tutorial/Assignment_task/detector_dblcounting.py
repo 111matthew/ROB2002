@@ -35,13 +35,13 @@ class DetectorBasic(Node):
         # detect a color blob in the color image
         # provide the right range values for each BGR channel (set to red bright objects)
         #bgr_thresh = cv.inRange(bgr_image, (0, 0, 80), (50, 50, 255))
-        red_thresh = cv.inRange(bgr_image, (0, 0, 80), (50, 50, 255))
-        green_thresh = cv.inRange(bgr_image, (0, 80, 0), (50, 255, 50))
-        blue_thresh = cv.inRange(bgr_image, (80, 0, 0), (255, 50, 50))
-        combined_thresh = cv.bitwise_or(cv.bitwise_or(red_thresh, green_thresh), blue_thresh)
+        red = cv.inRange(bgr_image, (0, 0, 80), (50, 50, 255))
+        green = cv.inRange(bgr_image, (0, 80, 0), (50, 255, 50))
+        blue = cv.inRange(bgr_image, (80, 0, 0), (255, 50, 50))
+        combined = cv.bitwise_or(cv.bitwise_or(red, green), blue)
 
         # finding all separate image regions in the binary image, using connected components algorithm
-        bgr_contours, _ = cv.findContours( combined_thresh,
+        bgr_contours, _ = cv.findContours( combined,
             cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
         detected_objects = []
@@ -83,7 +83,7 @@ class DetectorBasic(Node):
         # log the processed images to files
         if self.data_logging:
             cv.imwrite(self.log_path + f'colour_{self.seq:06d}.png', bgr_image)
-            cv.imwrite(self.log_path + f'mask_{self.seq:06d}.png', combined_thresh)
+            cv.imwrite(self.log_path + f'mask_{self.seq:06d}.png', combined)
 
         # visualise the image processing results    
         if self.visualisation:
